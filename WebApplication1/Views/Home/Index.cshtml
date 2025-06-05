@@ -1,0 +1,53 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NutriCompare | Сравнение питательных веществ</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<main>
+    <div class="app-container">
+        <header class="app-header">
+            <h1>🍏 NutriCompare</h1>
+            <p>Сравнение питательных веществ в свежих фруктах и овощах</p>
+        </header>
+
+        <div class="search-box">
+            <input type="text" id="food-search" placeholder="Search for a raw fruit/vegetable..." list="food-suggestions" />
+            <datalist id="food-suggestions"></datalist>
+        </div>
+
+        <div id="selected-foods" class="selected-foods"></div>
+
+        <div class="nutrient-filters">
+            <h3>Фильтры нутриентов</h3>
+            <div class="filter-controls">
+                <input type="text" id="filter-search" placeholder="Поиск нутриентов...">
+                <button id="select-all">Выбрать все</button>
+                <button id="deselect-all">Снять все</button>
+            </div>
+            <div class="filter-checkboxes" id="nutrient-checkboxes"></div>
+        </div>
+
+        <div class="visualization-controls">
+            <button id="toggle-visualization" class="active">Проанализировать на одном графике</button>
+            <button id="show-pie-charts">Визуализировать каждый отдельно</button>
+        </div>
+
+        <div id="bar-chart-container" class="chart-container">
+            <canvas id="nutrient-chart"></canvas>
+        </div>
+
+        <div id="pie-charts-container" class="pie-charts-container"></div>
+    </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="~/js/site.js"></script>
+</body>
+</html>
