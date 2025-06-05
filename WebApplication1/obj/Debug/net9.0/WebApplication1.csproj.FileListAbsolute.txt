@@ -85,4 +85,5 @@ C:\Users\HP\RiderProjects\WebApplication1\WebApplication1\obj\Debug\net9.0\WebAp
 C:\Users\HP\RiderProjects\WebApplication1\WebApplication1\obj\Debug\net9.0\WebApplication1.genruntimeconfig.cache
 C:\Users\HP\RiderProjects\WebApplication1\WebApplication1\obj\Debug\net9.0\ref\WebApplication1.dll
 C:\Users\HP\RiderProjects\WebApplication1\WebApplication1\obj\Debug\net9.0\compressed\sfr9826l73-trbwobbaop.gz
-C:\Users\HP\RiderProjects\WebApplication1\WebApplication1\obj\Debug\net9.0\compressed\9cuoy2kfs0-twcno1mppp.gz
+C:\Users\HP\RiderProjects\WebApplication1\WebApplication1\obj\Debug\net9.0\WebApplication1.sourcelink.json
+C:\Users\HP\RiderProjects\WebApplication1\WebApplication1\obj\Debug\net9.0\compressed\9cuoy2kfs0-jfxsdyslkd.gz

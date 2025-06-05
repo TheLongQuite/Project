@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
 using WebApplication1.Models;
 
 namespace WebApplication1.Services;
@@ -10,6 +11,10 @@ public class UsdaFoodService
     
     // Ключ для доступа в API USDA Food Central, уникальнен
     private readonly string _apiKey;
+    
+    private readonly IMemoryCache _cache;
+    
+    private readonly TimeSpan _cacheDuration = TimeSpan.FromHours(24);
     
     // Все возможные нутриенты
     private readonly string[] _relevantNutrients =
@@ -24,30 +29,38 @@ public class UsdaFoodService
         "Sugars", "Fat", "Saturated Fat"
     ];
 
-    public UsdaFoodService(HttpClient httpClient, IOptions<UsdaApiSettings> options)
+    public UsdaFoodService(HttpClient httpClient, 
+        IOptions<UsdaApiSettings> options,
+        IMemoryCache cache)
     {
         _httpClient = httpClient;
         _apiKey = options.Value.Key;
+        _cache = cache;
         _httpClient.BaseAddress = new Uri("https://api.nal.usda.gov/fdc/v1/");
     }
     
     public async Task<List<Food>> SearchFoodsAsync(string query)
     {
-        // Обращение с фильтрами по Foundation Foods (лишь сырая пища) + обязательное условие raw (не приготовленная, только свежая)
+        if (query.Length < 3) 
+            return [];
+        
+        string cacheKey = $"usda_foods_{query.ToLower()}";
+
+        if (_cache.TryGetValue(cacheKey, out List<Food>? cachedFoods)) 
+            return cachedFoods ?? [];
+        
         UsdaApiResponse? response = await _httpClient.GetFromJsonAsync<UsdaApiResponse>(
             $"foods/search?api_key={_apiKey}&query={query}%20raw&dataType=Foundation");
 
-        if (response?.Foods == null) 
-            return [];
-
-        // Группировка по нормализованным названиям, так как в базе данных присутствуют разделения даже по принципу с кожурой/без кожуры
-        List<Food> normalizedFoods = response.Foods
+        cachedFoods = response?.Foods?
             .GroupBy(f => NormalizeFoodName(f.Description))
             .Select(g => CreateFood(g.First()))
             .Where(f => f != null)
             .ToList()!;
 
-        return normalizedFoods;
+        _cache.Set(cacheKey, cachedFoods, _cacheDuration);
+
+        return cachedFoods ?? [];
     }
 
     private string NormalizeFoodName(string name) => name.Split(',')[0].Replace("raw", "").Replace("  ", " ").Trim().ToLower();
